@@ -11,7 +11,8 @@ plugins {
 }
 
 group = "com.okp4"
-description = "A Kafka Streams Processor"
+description = "A Kafka Streams Processor that consumes CØSMOS protobuf messages and send a" +
+    " json decoded message in the output topic"
 
 application {
     mainClass.set("com.okp4.processor.cosmos.MainKt")
@@ -60,6 +61,20 @@ dependencies {
     api("io.micrometer:micrometer-core:$micrometerVersion")
     api("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
 
+    val cosmosSdkVersion = "1.0-SNAPSHOT"
+    api("com.okp4.grpc:cosmos-sdk:$cosmosSdkVersion")
+    val okp4grpcVersion = "1.0"
+    api("com.okp4.grpc:okp4:$okp4grpcVersion")
+
+    val grpcVersion = "1.45.1"
+    api("io.grpc:grpc-protobuf:$grpcVersion")
+
+    val jsonVersion = "20220320"
+    implementation("org.json:json:$jsonVersion")
+
+    val jacksonProtobufVersion = "0.9.12"
+    implementation("com.hubspot.jackson:jackson-datatype-protobuf:$jacksonProtobufVersion")
+
     testImplementation(kotlin("test"))
 
     val kotestVersion = "5.2.1"
@@ -69,6 +84,8 @@ dependencies {
     testImplementation("io.kotest:kotest-framework-datatest:$kotestVersion")
 
     testImplementation("org.apache.kafka:kafka-streams-test-utils:$kafkaStreamVersion")
+
+    implementation("io.kotest:kotest-assertions-json:5.2.2")
 }
 
 tasks {

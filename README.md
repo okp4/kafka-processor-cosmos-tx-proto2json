@@ -1,6 +1,4 @@
-# Kafka Processor Template
-
-> Template for Kafka Streams Processor project @okp4.
+# Kafka Processor Decode Cosmos TX
 
 [![version](https://img.shields.io/github/v/release/okp4/template-kafka-processor)](https://github.com/okp4/template-kafka-processor/releases)
 [![build](https://github.com/okp4/template-kafka-processor/actions/workflows/build.yml/badge.svg)](https://github.com/okp4/template-kafka-processor/actions/workflows/build.yml)
@@ -11,7 +9,7 @@
 
 ## Purpose
 
-TBD
+A Kafka Streams Processor that consumes CØSMOS protobuf messages and send a json decoded message in the output topic.
 
 ## Implementation
 
