@@ -69,6 +69,10 @@ dependencies {
     val grpcVersion = "1.45.1"
     api("io.grpc:grpc-protobuf:$grpcVersion")
 
+    val protobufVersion = "3.20.0"
+    api("com.google.protobuf:protobuf-java:$protobufVersion")
+    api("com.google.protobuf:protobuf-java-util:$protobufVersion")
+
     testImplementation(kotlin("test"))
 
     val kotestVersion = "5.2.1"
