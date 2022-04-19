@@ -1,4 +1,4 @@
-package com.okp4.processor.cosmos
+package com.okp4.processor.cosmos.json
 
 import com.google.protobuf.Any
 import com.google.protobuf.util.JsonFormat
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 fun topology(props: Properties, typeRegistry: JsonFormat.TypeRegistry): Topology {
-    val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.topology")
+    val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.json.topology")
     val topicIn = requireNotNull(props.getProperty("topic.in")) {
         "Option 'topic.in' was not specified."
     }

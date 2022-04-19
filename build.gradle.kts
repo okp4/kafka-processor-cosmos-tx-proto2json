@@ -15,7 +15,7 @@ description = """A Kafka Streams Processor that consumes CØSMOS protobuf messag
 json decoded message in the output topic"""
 
 application {
-    mainClass.set("com.okp4.processor.cosmos.MainKt")
+    mainClass.set("com.okp4.processor.cosmos.json.MainKt")
 }
 
 fun prepareVersion(): String {

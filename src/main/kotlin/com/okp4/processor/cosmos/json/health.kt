@@ -1,4 +1,4 @@
-package com.okp4.processor.cosmos
+package com.okp4.processor.cosmos.json
 
 import com.sun.net.httpserver.HttpExchange
 import org.apache.kafka.streams.KafkaStreams.State.RUNNING

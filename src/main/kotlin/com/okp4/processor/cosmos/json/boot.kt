@@ -1,14 +1,13 @@
-package com.okp4.processor.cosmos
+package com.okp4.processor.cosmos.json
 
 import com.google.protobuf.util.JsonFormat
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
-import protoTypeRegistry
 import java.io.StringReader
 import java.util.*
 
-private val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.boot")
+private val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.json.boot")
 
 fun boot(
     args: Array<String>,

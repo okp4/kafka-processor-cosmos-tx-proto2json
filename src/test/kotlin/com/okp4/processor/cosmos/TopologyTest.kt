@@ -1,6 +1,8 @@
 package com.okp4.processor.cosmos
 
 import com.google.protobuf.Any
+import com.okp4.processor.cosmos.json.protoTypeRegistry
+import com.okp4.processor.cosmos.json.topology
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.datatest.withData
 import io.kotest.matchers.shouldBe
@@ -9,7 +11,6 @@ import okp4.okp4d.knowledge.Tx
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.TopologyTestDriver
-import protoTypeRegistry
 
 data class TestData(val tx: ByteArray, val expected: String)
 
@@ -36,7 +37,8 @@ class TopologyTest : BehaviorSpec({
                     Any.pack(
                         Tx.MsgBangDataspace.newBuilder().setName("Invasion plan B").setCreator("DarkLordBunny")
                             .setDescription("Get some carrots and finish the invasion").build()
-                    ).toByteArray(), """{
+                    ).toByteArray(),
+                    """{
   "@type": "type.googleapis.com/okp4.okp4d.knowledge.MsgBangDataspace",
   "creator": "DarkLordBunny",
   "name": "Invasion plan B",
