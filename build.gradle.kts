@@ -61,7 +61,7 @@ dependencies {
     api("io.micrometer:micrometer-core:$micrometerVersion")
     api("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
 
-    val cosmosSdkVersion = "1.0-SNAPSHOT"
+    val cosmosSdkVersion = "1.0"
     api("com.okp4.grpc:cosmos-sdk:$cosmosSdkVersion")
     val okp4grpcVersion = "1.0"
     api("com.okp4.grpc:okp4:$okp4grpcVersion")
