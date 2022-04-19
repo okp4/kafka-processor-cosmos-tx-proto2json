@@ -1,4 +1,4 @@
-package com.okp4.processor.cosmos
+package com.okp4.processor.cosmos.json
 
 import com.sun.net.httpserver.HttpServer
 import org.slf4j.LoggerFactory
@@ -7,7 +7,7 @@ import java.net.InetSocketAddress
 const val metricsRoute = "/prometheus"
 const val healthRoute = "/health"
 
-private val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.http")
+private val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.json.http")
 
 fun httpServe(port: Int = 8080) {
     HttpServer

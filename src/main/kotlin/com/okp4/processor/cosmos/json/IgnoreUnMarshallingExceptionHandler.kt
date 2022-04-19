@@ -1,4 +1,4 @@
-package com.okp4.processor.cosmos
+package com.okp4.processor.cosmos.json
 
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.streams.errors.DeserializationExceptionHandler

@@ -11,10 +11,11 @@ plugins {
 }
 
 group = "com.okp4"
-description = "A Kafka Streams Processor"
+description = """A Kafka Streams Processor that consumes CØSMOS protobuf messages and send a
+json decoded message in the output topic"""
 
 application {
-    mainClass.set("com.okp4.processor.cosmos.MainKt")
+    mainClass.set("com.okp4.processor.cosmos.json.MainKt")
 }
 
 fun prepareVersion(): String {
@@ -60,6 +61,21 @@ dependencies {
     api("io.micrometer:micrometer-core:$micrometerVersion")
     api("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
 
+    val cosmosSdkVersion = "1.0"
+    api("com.okp4.grpc:cosmos-sdk:$cosmosSdkVersion")
+    val okp4grpcVersion = "1.0"
+    api("com.okp4.grpc:okp4:$okp4grpcVersion")
+
+    val grpcVersion = "1.45.1"
+    api("io.grpc:grpc-protobuf:$grpcVersion")
+
+    val protobufVersion = "3.20.0"
+    api("com.google.protobuf:protobuf-java:$protobufVersion")
+    api("com.google.protobuf:protobuf-java-util:$protobufVersion")
+
+    val classgraphVersion = "4.8.145"
+    api("io.github.classgraph:classgraph:$classgraphVersion")
+
     testImplementation(kotlin("test"))
 
     val kotestVersion = "5.2.1"
@@ -69,6 +85,8 @@ dependencies {
     testImplementation("io.kotest:kotest-framework-datatest:$kotestVersion")
 
     testImplementation("org.apache.kafka:kafka-streams-test-utils:$kafkaStreamVersion")
+
+    implementation("io.kotest:kotest-assertions-json:5.2.2")
 }
 
 tasks {
@@ -128,7 +146,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/okp4/kafka-connector-cosmos")
+            url = uri("https://maven.pkg.github.com/okp4/" + project.name)
             credentials {
                 username = project.property("maven.credentials.username") as String
                 password = project.property("maven.credentials.password") as String

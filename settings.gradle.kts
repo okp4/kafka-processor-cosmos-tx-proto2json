@@ -1,1 +1,1 @@
-rootProject.name = "kafka-processor"
+rootProject.name = "kafka-processor-cosmos-tx-proto2json"

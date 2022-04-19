@@ -1,4 +1,4 @@
-package com.okp4.processor.cosmos
+package com.okp4.processor.cosmos.json
 
 import io.micrometer.core.instrument.binder.kafka.KafkaStreamsMetrics
 import org.apache.kafka.streams.KafkaStreams
@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.exitProcess
 
 internal val stream = AtomicReference<KafkaStreams?>()
-private val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.stream")
+private val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.json.stream")
 
 fun startStream(topology: Topology, props: Properties) {
     KafkaStreams(

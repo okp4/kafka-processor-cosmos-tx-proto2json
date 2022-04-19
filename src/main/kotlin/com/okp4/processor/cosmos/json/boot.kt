@@ -1,15 +1,21 @@
-package com.okp4.processor.cosmos
+package com.okp4.processor.cosmos.json
 
+import com.google.protobuf.util.JsonFormat
 import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.streams.Topology
 import org.slf4j.LoggerFactory
 import java.io.StringReader
 import java.util.*
 
-private val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.boot")
+private val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.json.boot")
 
-fun boot(args: Array<String>, topologyProvider: (props: Properties) -> Topology) {
+fun boot(
+    args: Array<String>,
+    topologyProvider: (props: Properties, typeRegistry: JsonFormat.TypeRegistry) -> Topology
+) {
     logger.info("Booting ${topologyProvider.javaClass.simpleName} topology")
+
+    val typeRegistry = protoTypeRegistry()
 
     val props =
         Properties()
@@ -21,7 +27,7 @@ fun boot(args: Array<String>, topologyProvider: (props: Properties) -> Topology)
                     IgnoreUnMarshallingExceptionHandler::class.java
                 )
             }
-    val topology = topologyProvider(props)
+    val topology = topologyProvider(props, typeRegistry)
         .also {
             logger.info("Topology:\n${it.describe()}")
         }
