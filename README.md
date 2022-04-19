@@ -9,7 +9,8 @@
 
 ## Purpose
 
-A Kafka Streams Processor that consumes CØSMOS protobuf messages from an `input` Kafka topic and sends a [JSON](https://www.json.org/json-en.html)
+A Kafka Streams Processor that consumes [CØSMOS](https://github.com/cosmos/cosmos-sdk) and [ØKP4](https://github.com/okp4/okp4d)
+[Protobuf](https://developers.google.com/protocol-buffers) messages from an `input` Kafka topic and sends a [JSON](https://www.json.org/json-en.html)
 decoded message in the `output` topic.
 
 <p align="center">
