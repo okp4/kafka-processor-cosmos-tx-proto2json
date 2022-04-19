@@ -9,7 +9,12 @@
 
 ## Purpose
 
-A Kafka Streams Processor that consumes CØSMOS protobuf messages and send a json decoded message in the output topic.
+A Kafka Streams Processor that consumes CØSMOS protobuf messages from an `input` Kafka topic and sends a [JSON](https://www.json.org/json-en.html)
+decoded message in the `output` topic.
+
+<p align="center">
+  <img src="./docs/overview.png">
+</p>
 
 ## Implementation
 
@@ -46,7 +51,7 @@ If you are on linux/mac then open a terminal, go into the root directory and run
 
 This command line produces 2 JAR files:
 
-- a _regular_ JAR: `kafka-processor-X.Y.jar`
-- a _fat_ JAR: `kafka-processor-X.Y-standalone.jar`
+- a _regular_ JAR: `kafka-processor-cosmos-tx-proto2json-X.Y.jar`
+- a _fat_ JAR: `kafka-processor-cosmos-tx-proto2json-X.Y-standalone.jar`
 
 This last one is the one to use as it contains all the dependencies in it.
