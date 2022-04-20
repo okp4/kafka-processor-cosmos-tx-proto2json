@@ -6,7 +6,7 @@ import com.google.protobuf.util.JsonFormat
 import io.github.classgraph.ClassGraph
 import org.slf4j.LoggerFactory
 
-val protoTypeRegistry: () -> JsonFormat.TypeRegistry = {
+val protoTypeRegistry: JsonFormat.TypeRegistry by lazy {
     val logger = LoggerFactory.getLogger("com.okp4.processor.cosmos.json.type-registry")
 
     ClassGraph().enableAllInfo().scan().use { scanResult ->
