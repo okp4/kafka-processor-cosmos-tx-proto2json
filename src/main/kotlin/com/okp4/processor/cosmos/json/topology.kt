@@ -21,6 +21,7 @@ fun topology(props: Properties, typeRegistry: JsonFormat.TypeRegistry): Topology
     }
     val formatter =
         JsonFormat.printer()
+            .omittingInsignificantWhitespace()
             .usingTypeRegistry(typeRegistry)
 
     return StreamsBuilder()
@@ -42,3 +43,4 @@ fun topology(props: Properties, typeRegistry: JsonFormat.TypeRegistry): Topology
                         .to(topicOut, Produced.with(Serdes.String(), Serdes.String()).withName("output"))
                 }.build()
         }
+        
