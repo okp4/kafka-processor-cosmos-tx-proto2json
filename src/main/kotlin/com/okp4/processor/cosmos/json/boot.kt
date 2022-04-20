@@ -15,8 +15,6 @@ fun boot(
 ) {
     logger.info("Booting ${topologyProvider.javaClass.simpleName} topology")
 
-    val typeRegistry = protoTypeRegistry()
-
     val props =
         Properties()
             .apply {
@@ -27,7 +25,7 @@ fun boot(
                     IgnoreUnMarshallingExceptionHandler::class.java
                 )
             }
-    val topology = topologyProvider(props, typeRegistry)
+    val topology = topologyProvider(props, protoTypeRegistry)
         .also {
             logger.info("Topology:\n${it.describe()}")
         }

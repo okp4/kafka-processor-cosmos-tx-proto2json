@@ -24,10 +24,9 @@ class TopologyTest : BehaviorSpec({
         "topic.in" to "in",
         "topic.out" to "out"
     ).toProperties()
-    val typeRegistry = protoTypeRegistry()
 
     given("A topology") {
-        val topology = topology(config, typeRegistry)
+        val topology = topology(config, protoTypeRegistry)
         val testDriver = TopologyTestDriver(topology, config)
         val inputTopic = testDriver.createInputTopic("in", stringSerde.serializer(), byteArraySerde.serializer())
         val outputTopic = testDriver.createOutputTopic("out", stringSerde.deserializer(), stringSerde.deserializer())
