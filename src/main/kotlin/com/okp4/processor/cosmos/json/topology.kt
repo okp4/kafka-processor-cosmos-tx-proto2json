@@ -19,10 +19,13 @@ fun topology(props: Properties, typeRegistry: JsonFormat.TypeRegistry): Topology
     val topicOut = requireNotNull(props.getProperty("topic.out")) {
         "Option 'topic.out' was not specified."
     }
+    val isPrettyPrint = props.getProperty("formatter.prettyPrint").toBoolean()
     val formatter =
         JsonFormat.printer()
-            .omittingInsignificantWhitespace()
             .usingTypeRegistry(typeRegistry)
+            .run {
+                if (!isPrettyPrint) omittingInsignificantWhitespace() else this
+            }
 
     return StreamsBuilder()
         .apply {
