@@ -41,7 +41,7 @@ afterEvaluate {
 repositories {
     mavenCentral()
     maven {
-        url = uri("https://maven.pkg.github.com/okp4/kafka-connector-cosmos")
+        url = uri("https://maven.pkg.github.com/okp4/okp4-cosmos-proto")
         credentials {
             username = project.property("maven.credentials.username") as String
             password = project.property("maven.credentials.password") as String
@@ -61,10 +61,9 @@ dependencies {
     api("io.micrometer:micrometer-core:$micrometerVersion")
     api("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
 
-    val cosmosSdkVersion = "1.1-SNAPSHOT"
-    api("com.okp4.grpc:cosmos-sdk:$cosmosSdkVersion")
-    val okp4grpcVersion = "1.1-SNAPSHOT"
-    api("com.okp4.grpc:okp4:$okp4grpcVersion")
+    val cosmosOkp4GrpcVersion = "1.1"
+    api("com.okp4.grpc:cosmos-sdk:$cosmosOkp4GrpcVersion")
+    api("com.okp4.grpc:okp4:$cosmosOkp4GrpcVersion")
 
     val grpcVersion = "1.45.1"
     api("io.grpc:grpc-protobuf:$grpcVersion")
@@ -146,7 +145,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/okp4/" + project.name)
+            url = uri("https://maven.pkg.github.com/okp4/${project.name}")
             credentials {
                 username = project.property("maven.credentials.username") as String
                 password = project.property("maven.credentials.password") as String
