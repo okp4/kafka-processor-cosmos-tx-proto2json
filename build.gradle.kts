@@ -72,7 +72,7 @@ dependencies {
     api("com.google.protobuf:protobuf-java:$protobufVersion")
     api("com.google.protobuf:protobuf-java-util:$protobufVersion")
 
-    val classgraphVersion = "4.8.145"
+    val classgraphVersion = "4.8.146"
     api("io.github.classgraph:classgraph:$classgraphVersion")
 
     testImplementation(kotlin("test"))
