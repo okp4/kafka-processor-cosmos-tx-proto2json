@@ -68,7 +68,7 @@ dependencies {
     val grpcVersion = "1.45.1"
     api("io.grpc:grpc-protobuf:$grpcVersion")
 
-    val protobufVersion = "3.20.0"
+    val protobufVersion = "3.20.1"
     api("com.google.protobuf:protobuf-java:$protobufVersion")
     api("com.google.protobuf:protobuf-java-util:$protobufVersion")
 
