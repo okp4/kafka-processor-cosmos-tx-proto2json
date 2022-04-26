@@ -65,7 +65,7 @@ dependencies {
     api("com.okp4.grpc:cosmos-sdk:$cosmosOkp4GrpcVersion")
     api("com.okp4.grpc:okp4:$cosmosOkp4GrpcVersion")
 
-    val grpcVersion = "1.45.1"
+    val grpcVersion = "1.46.0"
     api("io.grpc:grpc-protobuf:$grpcVersion")
 
     val protobufVersion = "3.20.0"
