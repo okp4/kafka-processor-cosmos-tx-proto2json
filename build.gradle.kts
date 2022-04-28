@@ -10,6 +10,10 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.20.0"
 }
 
+ktlint {
+    version.set("0.45.2")
+}
+
 group = "com.okp4"
 description = """A Kafka Streams Processor that consumes CØSMOS protobuf messages and send a
 json decoded message in the output topic"""
