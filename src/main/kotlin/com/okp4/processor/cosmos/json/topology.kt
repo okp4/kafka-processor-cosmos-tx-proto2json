@@ -40,10 +40,9 @@ fun topology(props: Properties, typeRegistry: JsonFormat.TypeRegistry): Topology
                         .setAuthInfo(TxOuterClass.AuthInfo.parseFrom(txRaw.authInfoBytes))
                         .build()
                 }, Named.`as`("unmarshall"))
-                    .mapValues({ it ->
-                        formatter.print(it)
-                    }, Named.`as`("serialize-json"))
-                        .to(topicOut, Produced.with(Serdes.String(), Serdes.String()).withName("output"))
-                }.build()
-        }
-        
+                .mapValues({ it ->
+                    formatter.print(it)
+                }, Named.`as`("serialize-json"))
+                .to(topicOut, Produced.with(Serdes.String(), Serdes.String()).withName("output"))
+        }.build()
+}
