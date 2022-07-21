@@ -1,8 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.io.FileOutputStream
+import java.util.zip.ZipFile
 
 plugins {
-    kotlin("jvm") version "1.6.21"
-    application
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.allopen") version "1.6.10"
+    id("io.quarkus")
 
     id("maven-publish")
 
@@ -15,12 +18,17 @@ ktlint {
 }
 
 group = "com.okp4"
-description = """A Kafka Streams Processor that consumes CØSMOS protobuf messages and send a
+description = """A Kafka Streams Processor using Quarkus that consumes CØSMOS protobuf messages and send a
 json decoded message in the output topic"""
 
-application {
-    mainClass.set("com.okp4.processor.cosmos.json.MainKt")
+val pullReflectionConfig: Configuration by configurations.creating
+configurations {
+    implementation.extendsFrom(pullReflectionConfig)
 }
+
+val quarkusPlatformGroupId: String by project
+val quarkusPlatformArtifactId: String by project
+val quarkusPlatformVersion: String by project
 
 fun prepareVersion(): String {
     val digits = (project.property("project.version") as String).split(".")
@@ -44,6 +52,7 @@ afterEvaluate {
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         url = uri("https://maven.pkg.github.com/okp4/okp4-cosmos-proto")
         credentials {
@@ -54,30 +63,25 @@ repositories {
 }
 
 dependencies {
-    val kafkaStreamVersion = "3.1.0"
-    api("org.apache.kafka:kafka-streams:$kafkaStreamVersion")
+    implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
+    implementation(enforcedPlatform("${quarkusPlatformGroupId}:quarkus-camel-bom:${quarkusPlatformVersion}"))
+    implementation("io.quarkus:quarkus-core-deployment")
+    implementation("io.quarkus:quarkus-grpc")
+    implementation("io.quarkus:quarkus-kotlin")
+    implementation("org.apache.camel.quarkus:camel-quarkus-protobuf")
+    implementation("io.quarkus:quarkus-kafka-streams")
+    implementation("io.quarkus:quarkus-micrometer")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("io.quarkus:quarkus-arc")
+    implementation("io.quarkus:quarkus-smallrye-health")
 
-    val slf4jVersion = "1.7.36"
-    api("org.slf4j:slf4j-api:$slf4jVersion")
-    api("org.slf4j:slf4j-log4j12:$slf4jVersion")
+    val cosmosSdkVersion = "1.2"
+    implementation("com.okp4.grpc:cosmos-sdk:$cosmosSdkVersion")
+    pullReflectionConfig("com.okp4.grpc:cosmos-sdk:$cosmosSdkVersion")
 
-    val micrometerVersion = "1.8.5"
-    api("io.micrometer:micrometer-core:$micrometerVersion")
-    api("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
-
-    val cosmosOkp4GrpcVersion = "1.1"
-    api("com.okp4.grpc:cosmos-sdk:$cosmosOkp4GrpcVersion")
-    api("com.okp4.grpc:okp4:$cosmosOkp4GrpcVersion")
-
-    val grpcVersion = "1.45.1"
-    api("io.grpc:grpc-protobuf:$grpcVersion")
-
-    val protobufVersion = "3.20.0"
-    api("com.google.protobuf:protobuf-java:$protobufVersion")
-    api("com.google.protobuf:protobuf-java-util:$protobufVersion")
-
-    val classgraphVersion = "4.8.146"
-    api("io.github.classgraph:classgraph:$classgraphVersion")
+    val grpcVersion = "1.46.0"
+    implementation("io.grpc:grpc-protobuf:$grpcVersion")
+    implementation("io.github.classgraph:classgraph:4.8.147")
 
     testImplementation(kotlin("test"))
 
@@ -87,25 +91,38 @@ dependencies {
     testImplementation("io.kotest:kotest-property:$kotestVersion")
     testImplementation("io.kotest:kotest-framework-datatest:$kotestVersion")
 
+    val kafkaStreamVersion = "3.1.0"
     testImplementation("org.apache.kafka:kafka-streams-test-utils:$kafkaStreamVersion")
 
     implementation("io.kotest:kotest-assertions-json:5.2.3")
 }
 
+allOpen {
+    annotation("javax.ws.rs.Path")
+    annotation("javax.enterprise.context.ApplicationScoped")
+    annotation("io.quarkus.test.junit.QuarkusTest")
+}
+
 tasks {
-    val fatJar = register<Jar>("fatJar") {
-        dependsOn.addAll(listOf("compileJava", "compileKotlin", "processResources"))
-        archiveClassifier.set("standalone")
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        manifest { attributes(mapOf("Main-Class" to application.mainClass)) }
-        val sourcesMain = sourceSets.main.get()
-        val contents = configurations.runtimeClasspath.get()
-            .map { if (it.isDirectory) it else zipTree(it) } +
-            sourcesMain.output
-        from(contents)
+    val task = register("reflectionConfig") {
+        val configPath = "reflection-config.json"
+        val configs = pullReflectionConfig.files.joinToString(",") {
+            val zip = ZipFile(it)
+            val entry = zip.getEntry(configPath)
+
+            buildDir.mkdirs()
+            val out = File(buildDir, "${it.name}-${entry.name}")
+            out.createNewFile()
+            zip.getInputStream(entry).transferTo(FileOutputStream(out))
+
+            out.path
+        }
+
+        System.setProperty("quarkus.native.additional-build-args", "-H:ReflectionConfigurationFiles=${configs}")
     }
+
     build {
-        dependsOn(fatJar)
+        dependsOn.add(task)
     }
 }
 
@@ -143,7 +160,6 @@ publishing {
     publications {
         create<MavenPublication>("maven") {
             from(components["java"])
-            artifact(tasks["fatJar"])
         }
     }
     repositories {
