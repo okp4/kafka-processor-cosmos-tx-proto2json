@@ -31,7 +31,7 @@ class TopologyProducer {
 
         val formatter =
             JsonFormat.printer()
-                .usingTypeRegistry(typeRegistry)
+                .usingTypeRegistry(ProtoTypeRegistry.protoTypeRegistry)
                 .run {
                     if (!prettyPrint) omittingInsignificantWhitespace() else this
                 }
