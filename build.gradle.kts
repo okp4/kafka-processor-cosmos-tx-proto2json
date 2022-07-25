@@ -89,7 +89,7 @@ dependencies {
 
     testImplementation("org.apache.kafka:kafka-streams-test-utils:$kafkaStreamVersion")
 
-    implementation("io.kotest:kotest-assertions-json:5.2.3")
+    implementation("io.kotest:kotest-assertions-json:5.4.0")
 }
 
 tasks {
