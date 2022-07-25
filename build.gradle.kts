@@ -63,8 +63,8 @@ repositories {
 }
 
 dependencies {
-    implementation(enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}"))
-    implementation(enforcedPlatform("${quarkusPlatformGroupId}:quarkus-camel-bom:${quarkusPlatformVersion}"))
+    implementation(enforcedPlatform("$quarkusPlatformGroupId:$quarkusPlatformArtifactId:$quarkusPlatformVersion"))
+    implementation(enforcedPlatform("$quarkusPlatformGroupId:quarkus-camel-bom:$quarkusPlatformVersion"))
     implementation("io.quarkus:quarkus-core-deployment")
     implementation("io.quarkus:quarkus-grpc")
     implementation("io.quarkus:quarkus-kotlin")
@@ -118,7 +118,7 @@ tasks {
             out.path
         }
 
-        System.setProperty("quarkus.native.additional-build-args", "-H:ReflectionConfigurationFiles=${configs}")
+        System.setProperty("quarkus.native.additional-build-args", "-H:ReflectionConfigurationFiles=$configs")
     }
 
     build {
