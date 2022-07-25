@@ -5,6 +5,7 @@ import cosmos.tx.v1beta1.TxOuterClass
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.Topology
+import org.apache.kafka.streams.kstream.Branched
 import org.apache.kafka.streams.kstream.Consumed
 import org.apache.kafka.streams.kstream.Named
 import org.apache.kafka.streams.kstream.Produced
@@ -43,18 +44,54 @@ class TopologyProducer {
                 stream(topicIn, Consumed.with(Serdes.String(), Serdes.ByteArray()).withName("input"))
                     .peek({ _, _ -> logger.info("Received a message") }, Named.`as`("log"))
                     .mapValues({ v ->
-                        val txRaw = TxOuterClass.TxRaw.parseFrom(v)
-
-                        TxOuterClass.Tx.newBuilder()
-                            .addAllSignatures(txRaw.signaturesList)
-                            .setBody(TxOuterClass.TxBody.parseFrom(txRaw.bodyBytes))
-                            .setAuthInfo(TxOuterClass.AuthInfo.parseFrom(txRaw.authInfoBytes))
-                            .build()
+                        Pair(
+                            v,
+                            kotlin.runCatching {
+                                TxOuterClass.TxRaw.parseFrom(v).run {
+                                    TxOuterClass.Tx.newBuilder()
+                                        .addAllSignatures(this.signaturesList)
+                                        .setBody(TxOuterClass.TxBody.parseFrom(this.bodyBytes))
+                                        .setAuthInfo(TxOuterClass.AuthInfo.parseFrom(this.authInfoBytes))
+                                        .build()
+                                }
+                            }
+                        )
                     }, Named.`as`("unmarshall"))
-                    .mapValues({ it ->
-                        formatter.print(it)
-                    }, Named.`as`("serialize-json"))
-                    .to(topicOut, Produced.with(Serdes.String(), Serdes.String()).withName("output"))
+                    .split()
+                    .branch(
+                        { _, v -> v.second.isFailure },
+                        Branched.withConsumer { stream ->
+                            stream.peek(
+                                { k, v ->
+                                    v.second.onFailure {
+                                        logger.warn("Unmarshalling failed for tx with key <$k>; ${it.message}", it)
+                                    }
+                                },
+                                Named.`as`("log-unmarshalling-failure")
+                            )
+                                .mapValues({ pair -> pair.first }, Named.`as`("extract-tx-bytearray"))
+                                .apply {
+                                    if (!topicError.isNullOrEmpty()) {
+                                        logger.info("Failed tx will be sent to the topic $topicError")
+                                        to(
+                                            topicError, Produced.with(Serdes.String(), Serdes.ByteArray()).withName("error")
+                                        )
+                                    }
+                                }
+                        }
+                    ).defaultBranch(
+                        Branched.withConsumer { stream ->
+                            stream.mapValues(
+                                { v ->
+                                    v.second.getOrThrow()
+                                }, Named.`as`("extract-tx")
+                            )
+                                .mapValues({ it ->
+                                    formatter.print(it)
+                                }, Named.`as`("serialize-json"))
+                                .to(topicOut, Produced.with(Serdes.String(), Serdes.String()).withName("output"))
+                        }
+                    )
             }.build()
     }
 }
