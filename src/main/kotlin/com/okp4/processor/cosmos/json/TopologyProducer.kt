@@ -10,7 +10,6 @@ import org.apache.kafka.streams.kstream.Named
 import org.apache.kafka.streams.kstream.Produced
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.LoggerFactory
-import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.inject.Produces
 
@@ -18,11 +17,14 @@ import javax.enterprise.inject.Produces
 class TopologyProducer {
     @field:ConfigProperty(name = "topic.in", defaultValue = "topic.in")
     lateinit var topicIn: String
+
     @field:ConfigProperty(name = "topic.out", defaultValue = "topic.out")
     lateinit var topicOut: String
+
     @field:ConfigProperty(name = "topic.error", defaultValue = "")
     var topicError: String? = null
-    @field:ConfigProperty(name = "prettyprint", defaultValue = "false")
+
+    @field:ConfigProperty(name = "formatter.prettyPrint", defaultValue = "false")
     var prettyPrint = false
 
     @Produces

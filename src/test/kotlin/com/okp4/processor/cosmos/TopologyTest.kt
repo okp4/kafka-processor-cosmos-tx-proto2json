@@ -1,8 +1,7 @@
 package com.okp4.processor.cosmos
 
 import com.google.protobuf.ByteString.copyFrom
-import com.okp4.processor.cosmos.json.protoTypeRegistry
-import com.okp4.processor.cosmos.json.topology
+import com.okp4.processor.cosmos.json.TopologyProducer
 import cosmos.tx.v1beta1.TxOuterClass
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.data.forAll
@@ -101,7 +100,13 @@ class TopologyTest : BehaviorSpec({
                 }
                 .toProperties()
 
-            val topology = topology(config, protoTypeRegistry)
+            val topology = TopologyProducer().apply {
+                topicError = ""
+                topicIn = config.getProperty("topic.in")
+                topicOut = config.getProperty("topic.out")
+                prettyPrint = config.getProperty("formatter.prettyPrint").toBoolean()
+            }
+                .buildTopology()
             val testDriver = TopologyTestDriver(topology, config)
             val inputTopic = testDriver.createInputTopic("in", stringSerde.serializer(), byteArraySerde.serializer())
             val outputTopic =
