@@ -52,7 +52,6 @@ afterEvaluate {
 
 repositories {
     mavenCentral()
-    mavenLocal()
     maven {
         url = uri("https://maven.pkg.github.com/okp4/okp4-cosmos-proto")
         credentials {
