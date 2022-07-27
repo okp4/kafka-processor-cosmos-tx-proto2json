@@ -11,6 +11,7 @@ import org.apache.kafka.streams.kstream.Named
 import org.apache.kafka.streams.kstream.Produced
 import org.eclipse.microprofile.config.inject.ConfigProperty
 import org.slf4j.LoggerFactory
+import java.util.*
 import javax.enterprise.context.ApplicationScoped
 import javax.enterprise.inject.Produces
 
@@ -22,8 +23,8 @@ class TopologyProducer {
     @field:ConfigProperty(name = "topic.out", defaultValue = "topic.out")
     lateinit var topicOut: String
 
-    @field:ConfigProperty(name = "topic.error", defaultValue = "")
-    var topicError: String? = null
+    @field:ConfigProperty(name = "topic.error")
+    var topicError: Optional<String> = Optional.empty()
 
     @field:ConfigProperty(name = "formatter.prettyPrint", defaultValue = "false")
     var prettyPrint = false
@@ -71,10 +72,11 @@ class TopologyProducer {
                             )
                                 .mapValues({ pair -> pair.first }, Named.`as`("extract-tx-bytearray"))
                                 .apply {
-                                    if (!topicError.isNullOrEmpty()) {
+                                    if (topicError.isPresent) {
                                         logger.info("Failed tx will be sent to the topic $topicError")
                                         to(
-                                            topicError, Produced.with(Serdes.String(), Serdes.ByteArray()).withName("error")
+                                            topicError.get(),
+                                            Produced.with(Serdes.String(), Serdes.ByteArray()).withName("error")
                                         )
                                     }
                                 }
