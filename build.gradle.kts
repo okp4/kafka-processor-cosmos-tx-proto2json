@@ -84,7 +84,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
 
-    val kotestVersion = "5.2.3"
+    val kotestVersion = "5.4.1"
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
