@@ -54,3 +54,10 @@ If you are on linux/mac then open a terminal, go into the root directory and run
 ```
 
 This command line produces a _native_ executable: `kafka-processor-cosmos-tx-proto2json-X.Y-runner`
+
+## You want to get involved? 😍
+
+Please check out OKP4 health files :
+
+- [Contributing](https://github.com/okp4/.github/blob/main/CONTRIBUTING.md)
+- [Code of conduct](https://github.com/okp4/.github/blob/main/CODE_OF_CONDUCT.md)
