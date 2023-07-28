@@ -78,7 +78,7 @@ dependencies {
     implementation("com.okp4.grpc:cosmos-sdk:$cosmosSdkVersion")
     pullReflectionConfig("com.okp4.grpc:cosmos-sdk:$cosmosSdkVersion")
 
-    val grpcVersion = "1.46.0"
+    val grpcVersion = "1.57.0"
     implementation("io.grpc:grpc-protobuf:$grpcVersion")
     implementation("io.github.classgraph:classgraph:4.8.147")
 
